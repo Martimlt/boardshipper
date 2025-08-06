@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Shipment - BoardShipper</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">BoardShipper</div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'home' %}#about">About</a></li>
+                <li><a href="{% url 'book' %}" class="book-button">BOOK NOW!</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Book It Section -->
+    <section class="book-it page-section">
+        <div class="container">
+            <h1>Book Your Shipment</h1>
+            <form class="booking-form" id="bookingForm">
+                <div class="form-section">
+                    <h3>Sender Information</h3>
+                    <div class="form-group">
+                        <label for="senderName">Your/Company Name *</label>
+                        <input type="text" id="senderName" name="senderName" required>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Recipient Information</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipientFirstName">First Name *</label>
+                            <input type="text" id="recipientFirstName" name="recipientFirstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipientLastName">Last Name *</label>
+                            <input type="text" id="recipientLastName" name="recipientLastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientStreet">Street Address *</label>
+                        <input type="text" id="recipientStreet" name="recipientStreet" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipientCity">City *</label>
+                            <input type="text" id="recipientCity" name="recipientCity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipientState">State/Province *</label>
+                            <input type="text" id="recipientState" name="recipientState" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="recipientZip">Zip/Postal Code *</label>
+                            <input type="text" id="recipientZip" name="recipientZip" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientCountry">Country *</label>
+                        <select id="recipientCountry" name="recipientCountry" required>
+                            <option value="">Select country</option>
+                            <option value="US">United States</option>
+                            <option value="CA">Canada</option>
+                            <option value="MX">Mexico</option>
+                            <option value="AU">Australia</option>
+                            <option value="BR">Brazil</option>
+                            <option value="FR">France</option>
+                            <option value="DE">Germany</option>
+                            <option value="IT">Italy</option>
+                            <option value="JP">Japan</option>
+                            <option value="NZ">New Zealand</option>
+                            <option value="PT">Portugal</option>
+                            <option value="ES">Spain</option>
+                            <option value="GB">United Kingdom</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Package Details</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="boxSize">Box Size *</label>
+                            <select id="boxSize" name="boxSize" required>
+                                <option value="">Select size</option>
+                                <option value="small">Small (up to 6')</option>
+                                <option value="medium">Medium (6' - 8')</option>
+                                <option value="large">Large (8'+)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Weight (lbs) *</label>
+                            <input type="number" id="weight" name="weight" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="orderReference">Order Reference</label>
+                        <input type="text" id="orderReference" name="orderReference">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Service Type</h3>
+                    <div class="form-group">
+                        <label for="service">Select Service *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="service" value="door-to-door" required>
+                                <span>Door to Door</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="service" value="airport-to-airport" required>
+                                <span>Airport to Airport</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="additionalInfo">Additional Information</label>
+                        <textarea id="additionalInfo" name="additionalInfo" rows="4" placeholder="Any special instructions or requirements..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-button">Submit Booking Request</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-brand">BoardShipper</p>
+                <p>a Sea Crown Ventures company</p>
+                <p>© Copyright 2025 Sea Crown Ventures</p>
+                <p class="footer-disclaimer">All rights reserved. All registered trademarks herein are the property of their respective owners.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>

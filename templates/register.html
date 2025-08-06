@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - BoardShipper</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 100px auto 50px;
+            padding: 2rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .auth-container h2 {
+            color: #1e3a8a;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .auth-container .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .auth-container .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+        .auth-container input, .auth-container textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .auth-container input:focus, .auth-container textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .form-row:has(.form-group:nth-child(3)) {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+        .auth-container .submit-button {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .auth-container .submit-button:hover {
+            background-color: #2563eb;
+        }
+        .auth-links {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .auth-links a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        .errorlist {
+            color: #ef4444;
+            list-style: none;
+            padding: 0;
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">BoardShipper</div>
+            <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'home' %}#about">About</a></li>
+                <li><a href="{% url 'login' %}" class="book-button">BOOK NOW!</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <h2>Create Your Business Account</h2>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_business_name">Business/Company Name</label>
+                {{ form.business_name }}
+                {{ form.business_name.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_email">Business Email Address</label>
+                {{ form.email }}
+                {{ form.email.errors }}
+            </div>
+            
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: #1e3a8a; font-size: 1.25rem;">Business Address</h3>
+            
+            <div class="form-group">
+                <label for="id_street_address">Street Address</label>
+                {{ form.street_address }}
+                {{ form.street_address.errors }}
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="id_city">City</label>
+                    {{ form.city }}
+                    {{ form.city.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="id_state">State/Province</label>
+                    {{ form.state }}
+                    {{ form.state.errors }}
+                </div>
+                <div class="form-group">
+                    <label for="id_zip_code">Zip/Postal Code</label>
+                    {{ form.zip_code }}
+                    {{ form.zip_code.errors }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="id_country">Country</label>
+                {{ form.country }}
+                {{ form.country.errors }}
+            </div>
+            
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: #1e3a8a; font-size: 1.25rem;">Security</h3>
+            
+            <div class="form-group">
+                <label for="id_password1">Password</label>
+                {{ form.password1 }}
+                {{ form.password1.errors }}
+            </div>
+            <div class="form-group">
+                <label for="id_password2">Confirm Password</label>
+                {{ form.password2 }}
+                {{ form.password2.errors }}
+            </div>
+            <button type="submit" class="submit-button">Create Business Account</button>
+        </form>
+        
+        <div class="auth-links">
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            <p><a href="{% url 'home' %}">Back to Home</a></p>
+        </div>
+    </div>
+
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
