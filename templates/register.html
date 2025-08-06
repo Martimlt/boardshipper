@@ -1,11 +1,14 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - BoardShipper</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% extends 'base.html' %}
+
+{% block title %}Create Account - BoardShipper{% endblock %}
+
+{% block nav_links %}
+    <li><a href="{% url 'home' %}">Home</a></li>
+    <li><a href="{% url 'home' %}#about">About</a></li>
+    <li><a href="{% url 'login' %}" class="book-button">BOOK NOW!</a></li>
+{% endblock %}
+
+{% block extra_head %}
     <style>
         .auth-container {
             max-width: 500px;
@@ -57,14 +60,15 @@
             border-radius: 5px;
             font-size: 1.1rem;
             cursor: pointer;
-            margin-top: 1rem;
+            transition: background-color 0.3s;
+            margin-top: 1.5rem;
         }
         .auth-container .submit-button:hover {
             background-color: #2563eb;
         }
         .auth-links {
             text-align: center;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
         .auth-links a {
             color: #3b82f6;
@@ -73,33 +77,28 @@
         .auth-links a:hover {
             text-decoration: underline;
         }
+        .auth-links p {
+            margin: 0.5rem 0;
+        }
         .errorlist {
-            color: #ef4444;
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
             list-style: none;
             padding: 0;
-            margin: 0.5rem 0;
-            font-size: 0.9rem;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .form-row:has(.form-group:nth-child(3)) {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">BoardShipper</div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'home' %}#about">About</a></li>
-                <li><a href="{% url 'login' %}" class="book-button">BOOK NOW!</a></li>
-            </ul>
-        </div>
-    </nav>
+{% endblock %}
 
+{% block content %}
     <div class="auth-container">
         <h2>Create Your Business Account</h2>
         
@@ -166,7 +165,4 @@
             <p><a href="{% url 'home' %}">Back to Home</a></p>
         </div>
     </div>
-
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html>
+{% endblock %}

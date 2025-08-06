@@ -1,45 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BoardShipper - Professional Surfboard Shipping</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">BoardShipper</div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'book' %}" class="book-button">BOOK NOW!</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% else %}
-                    <li><a href="{% url 'login' %}" class="book-button">BOOK NOW!</a></li>
-                {% endif %}
-            </ul>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
-    {% if messages %}
-        <div style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 90%; max-width: 600px;">
-            {% for message in messages %}
-                <div style="background: #10b981; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
+{% block content %}
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-image">
@@ -98,20 +59,4 @@
             </div>
         </div>
     </section>
-
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p class="footer-brand">BoardShipper</p>
-                <p>a Sea Crown Ventures company</p>
-                <p>© Copyright 2025 Sea Crown Ventures</p>
-                <p class="footer-disclaimer">All rights reserved. All registered trademarks herein are the property of their respective owners.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html>
+{% endblock %}

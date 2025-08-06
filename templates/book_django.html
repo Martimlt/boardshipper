@@ -1,31 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Your Shipment - BoardShipper</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-</head>
-<body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">BoardShipper</div>
-            <button class="mobile-menu-toggle" id="mobileMenuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="{% url 'home' %}">Home</a></li>
-                <li><a href="{% url 'home' %}#about">About</a></li>
-                <li><a href="{% url 'book' %}" class="book-button">BOOK NOW!</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
+{% extends 'base.html' %}
 
+{% block title %}Book Your Shipment - BoardShipper{% endblock %}
+
+{% block content %}
     <!-- Book It Section -->
     <section class="book-it page-section">
         <div class="container">
@@ -80,23 +57,7 @@
                     </div>
                     <div class="form-group">
                         <label for="id_recipient_country">Country *</label>
-                        <select id="id_recipient_country" name="recipient_country" required>
-                            <option value="">Select country</option>
-                            <option value="US">United States</option>
-                            <option value="CA">Canada</option>
-                            <option value="MX">Mexico</option>
-                            <option value="AU">Australia</option>
-                            <option value="BR">Brazil</option>
-                            <option value="FR">France</option>
-                            <option value="DE">Germany</option>
-                            <option value="IT">Italy</option>
-                            <option value="JP">Japan</option>
-                            <option value="NZ">New Zealand</option>
-                            <option value="PT">Portugal</option>
-                            <option value="ES">Spain</option>
-                            <option value="GB">United Kingdom</option>
-                            <option value="other">Other</option>
-                        </select>
+                        <input type="text" id="id_recipient_country" name="recipient_country" required>
                     </div>
                 </div>
 
@@ -104,17 +65,17 @@
                     <h3>Package Details</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="id_box_size">Box Size *</label>
+                            <label for="id_box_size">Board Type *</label>
                             <select id="id_box_size" name="box_size" required>
-                                <option value="">Select size</option>
-                                <option value="small">Small (up to 6')</option>
-                                <option value="medium">Medium (6' - 8')</option>
-                                <option value="large">Large (8'+)</option>
+                                <option value="">Select board type</option>
+                                <option value="shortboard">Shortboard</option>
+                                <option value="midlength">Midlength</option>
+                                <option value="longboard">Longboard</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="id_weight">Weight (lbs) *</label>
-                            <input type="number" id="id_weight" name="weight" min="1" step="0.01" required>
+                            <input type="number" id="id_weight" name="weight" min="1" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -129,11 +90,11 @@
                         <label for="service">Select Service *</label>
                         <div class="radio-group">
                             <label class="radio-label">
-                                <input type="radio" name="service" value="door-to-door" required>
+                                <input type="radio" name="service_type" value="door-to-door" required>
                                 <span>Door to Door</span>
                             </label>
                             <label class="radio-label">
-                                <input type="radio" name="service" value="airport-to-airport" required>
+                                <input type="radio" name="service_type" value="airport-to-airport" required>
                                 <span>Airport to Airport</span>
                             </label>
                         </div>
@@ -151,19 +112,4 @@
             </form>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <p class="footer-brand">BoardShipper</p>
-                <p>a Sea Crown Ventures company</p>
-                <p>© Copyright 2025 Sea Crown Ventures</p>
-                <p class="footer-disclaimer">All rights reserved. All registered trademarks herein are the property of their respective owners.</p>
-            </div>
-        </div>
-    </footer>
-
-    <script src="{% static 'js/script.js' %}"></script>
-</body>
-</html>
+{% endblock %}

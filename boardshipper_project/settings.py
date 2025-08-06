@@ -18,7 +18,7 @@ SECRET_KEY = 'django-insecure-&7y+5!x@#$%^&*()_+boardshipper2025secretkey'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["boardshipper.pythonanywhere.com"]
+ALLOWED_HOSTS = ["boardshipper.pythonanywhere.com", "127.0.0.1"]
 
 
 # Application definition
