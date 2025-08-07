@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login - BoardShipper{% endblock %}
 
 {% block nav_links %}
     <li><a href="{% url 'home' %}">Home</a></li>
     <li><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'contact' %}">Contact</a></li>
     <li><a href="{% url 'register' %}">Create Account</a></li>
 {% endblock %}
 
 {% block extra_head %}
     <style>
+        body {
+            background-image: url("{% static 'images/BG_wave.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
         .auth-container {
             max-width: 400px;
             margin: 100px auto;
