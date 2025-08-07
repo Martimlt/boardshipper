@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-image">
-            <img src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Surfboard on beach">
+            <img src="{% static 'images/Frye.jpg' %}" alt="Surfboard on beach">
         </div>
         <div class="hero-content">
-            <h1>Ship Your Board With Confidence</h1>
-            <p>Professional surfboard shipping services worldwide</p>
+            <h1>Surf-Centric Logistics</h1>
             {% if user.is_authenticated %}
                 <a href="{% url 'book' %}" class="cta-button">BOOK NOW!</a>
             {% else %}
@@ -17,44 +17,22 @@
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
+    <!-- Services Section -->
+    <section id="services" class="about">
         <div class="container">
-            <h2>About BoardShipper</h2>
-            <div class="about-content">
-                <p>BoardShipper is your trusted partner for shipping surfboards safely and efficiently across the globe. With years of experience in handling precious cargo, we understand that your board is more than just equipment - it's your connection to the waves.</p>
-                <p>We offer specialized packaging, careful handling, and competitive rates to ensure your surfboard arrives at its destination in perfect condition. Whether you're traveling to your next surf adventure or sending boards to customers, we've got you covered.</p>
-                <div class="features">
-                    <div class="feature">
-                        <h3>Safe Handling</h3>
-                        <p>Professional packaging and careful transport</p>
-                    </div>
-                    <div class="feature">
-                        <h3>Global Reach</h3>
-                        <p>Door-to-door and airport-to-airport services</p>
-                    </div>
-                    <div class="feature">
-                        <h3>Tracking</h3>
-                        <p>Real-time updates on your shipment</p>
-                    </div>
+            <h2>Our Services</h2>
+            <div class="services-section">
+                <div class="service-item">
+                    <img src="{% static 'images/Blanks.jpg' %}" alt="Door to Door Service" style="max-width: 200px; height: auto; margin-bottom: 1rem;">
+                    <h3>DOOR TO DOOR</h3>
+                    <p>Flat shipping rates by board size,<br>
+                    with full tracking and insurance<br>
+                    Domestic and International.</p>
                 </div>
-                
-                <div class="services-section">
-                    <div class="service-item">
-                        <h3>DOOR TO DOOR</h3>
-                        <p>Flat shipping rates by board size,<br>
-                        with full tracking and insurance<br>
-                        Domestic and International.</p>
-                    </div>
-                    <div class="service-item">
-                        <h3>AIRPORT TO AIRPORT</h3>
-                        <p>Cost effective way to route boards<br>
-                        to major airports worldwide</p>
-                    </div>
-                    <div class="service-item">
-                        <h3>LOCAL DELIVERY</h3>
-                        <p>California coastal route</p>
-                    </div>
+                <div class="service-item">
+                    <img src="{% static 'images/Delivery.jpg' %}" alt="Local Delivery Service" style="max-width: 200px; height: auto; margin-bottom: 1rem;">
+                    <h3>LOCAL DELIVERY</h3>
+                    <p>California coastal route</p>
                 </div>
             </div>
         </div>

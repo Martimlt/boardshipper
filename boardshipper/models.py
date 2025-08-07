@@ -48,6 +48,11 @@ class Booking(models.Model):
     # Additional Information
     additional_info = models.TextField(blank=True)
     
+    # EasyPost Integration Fields
+    label_url = models.URLField(blank=True, null=True)
+    tracking_url = models.URLField(blank=True, null=True)
+    easypost_shipment_id = models.CharField(max_length=100, blank=True, null=True)
+    
     # Timestamp
     created_at = models.DateTimeField(auto_now_add=True)
     
