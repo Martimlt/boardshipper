@@ -30,9 +30,9 @@ class Booking(models.Model):
     
     # Package Details
     BOX_SIZE_CHOICES = [
-        ('small', 'Small (up to 6\')'),
-        ('medium', 'Medium (6\' - 8\')'),
-        ('large', 'Large (8\'+)'),
+        ('shortboard', 'Shortboard'),
+        ('midlength', 'Midlength'),
+        ('longboard', 'Longboard'),
     ]
     box_size = models.CharField(max_length=10, choices=BOX_SIZE_CHOICES)
     weight = models.DecimalField(max_digits=10, decimal_places=2)

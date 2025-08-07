@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from .models import Booking, UserProfile
 from .forms import BookingForm
 from .auth_forms import LoginForm, RegistrationForm
+from .utils import create_easypost_shipment
 
 def home(request):
     return render(request, 'home.html')
@@ -79,9 +80,29 @@ def book(request):
             else:
                 booking.sender_name = request.user.first_name
             booking.save()
-            messages.success(request, 'Thank you for your booking request! We will process your information and contact you soon with shipping details.')
-            return redirect('home')
+            
+            # === CREATE LABEL WITH EASYPOST ===
+            try:
+                if hasattr(request.user, 'profile'):
+                    sender_profile = request.user.profile
+                    result = create_easypost_shipment(sender_profile, booking)
+                    booking.label_url = result['label_url']
+                    booking.tracking_url = result['tracking_url']
+                    booking.easypost_shipment_id = result['shipment_id']
+                    booking.save()
+                    messages.success(request, 'Booking successful! Your shipping label has been created. You can download or print your label below.')
+                else:
+                    messages.warning(request, 'Booking saved but label creation requires a complete business profile.')
+            except Exception as e:
+                messages.warning(request, f'Booking saved but label creation failed: {str(e)}. We will contact you with shipping details.')
+            
+            return redirect('booking_detail', pk=booking.pk)
     else:
         form = BookingForm()
     
     return render(request, 'book_django.html', {'form': form})
+
+@login_required
+def booking_detail(request, pk):
+    booking = get_object_or_404(Booking, pk=pk, user=request.user)
+    return render(request, 'booking_detail.html', {'booking': booking})

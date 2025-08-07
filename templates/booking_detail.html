@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Booking Details - BoardShipper{% endblock %}
+
+{% block content %}
+    <!-- Booking Detail Section -->
+    <section class="page-section">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; margin-top: 3rem; color: #4a90e2;">Booking Details</h2>
+            
+            <div class="booking-detail" style="max-width: 800px; margin: 0 auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                
+                <!-- Booking Reference -->
+                <div style="text-align: center; margin-bottom: 2rem; padding-bottom: 2rem; border-bottom: 2px solid #e5e7eb;">
+                    <h3 style="color: #4a90e2; margin-bottom: 0.5rem;">Booking Reference</h3>
+                    <p style="font-size: 1.2rem; font-weight: bold;">#{{ booking.id }}</p>
+                    <p style="color: #666;">Created: {{ booking.created_at|date:"F d, Y g:i A" }}</p>
+                </div>
+
+                <!-- Shipping Labels and Tracking -->
+                {% if booking.label_url or booking.tracking_url %}
+                <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                    <h3 style="color: #4a90e2; margin-bottom: 1rem;">Shipping Information</h3>
+                    
+                    {% if booking.label_url %}
+                    <div style="margin-bottom: 1rem;">
+                        <a href="{{ booking.label_url }}" target="_blank" style="display: inline-block; background: #4a90e2; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; margin-right: 1rem;">
+                            📦 Download Shipping Label
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if booking.tracking_url %}
+                    <div style="margin-bottom: 1rem;">
+                        <a href="{{ booking.tracking_url }}" target="_blank" style="display: inline-block; background: #10b981; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px;">
+                            🚚 Track Your Shipment
+                        </a>
+                    </div>
+                    {% endif %}
+                    
+                    {% if booking.easypost_shipment_id %}
+                    <p style="color: #666; font-size: 0.9rem; margin-top: 1rem;">
+                        Shipment ID: {{ booking.easypost_shipment_id }}
+                    </p>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Sender Information -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #4a90e2; margin-bottom: 1rem;">Sender Information</h3>
+                    <p><strong>Name:</strong> {{ booking.sender_name }}</p>
+                </div>
+
+                <!-- Recipient Information -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #4a90e2; margin-bottom: 1rem;">Recipient Information</h3>
+                    <p><strong>Name:</strong> {{ booking.recipient_first_name }} {{ booking.recipient_last_name }}</p>
+                    <p><strong>Address:</strong> {{ booking.recipient_street }}</p>
+                    <p><strong>City:</strong> {{ booking.recipient_city }}</p>
+                    <p><strong>State:</strong> {{ booking.recipient_state }}</p>
+                    <p><strong>Zip:</strong> {{ booking.recipient_zip }}</p>
+                    <p><strong>Country:</strong> {{ booking.recipient_country }}</p>
+                </div>
+
+                <!-- Package Details -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #4a90e2; margin-bottom: 1rem;">Package Details</h3>
+                    <p><strong>Board Type:</strong> {{ booking.get_box_size_display|default:booking.box_size|title }}</p>
+                    <p><strong>Weight:</strong> {{ booking.weight }} lbs</p>
+                    {% if booking.order_reference %}
+                    <p><strong>Order Reference:</strong> {{ booking.order_reference }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Service Type -->
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #4a90e2; margin-bottom: 1rem;">Service Type</h3>
+                    <p><strong>Service:</strong> {{ booking.get_service_display|default:"Door to Door" }}</p>
+                </div>
+
+                <!-- Additional Information -->
+                {% if booking.additional_info %}
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="color: #4a90e2; margin-bottom: 1rem;">Additional Information</h3>
+                    <p>{{ booking.additional_info }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e5e7eb;">
+                    <a href="{% url 'book' %}" style="display: inline-block; background: #4a90e2; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; margin-right: 1rem;">
+                        Create New Booking
+                    </a>
+                    <a href="{% url 'home' %}" style="display: inline-block; background: #6b7280; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px;">
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
