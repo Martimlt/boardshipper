@@ -22,7 +22,7 @@ body {
 
 /* Navigation */
 .navbar {
-    background-color: #1e3a8a;
+    background-color: #4a90e2;
     color: white;
     padding: 0.75rem 0;
     position: fixed;
@@ -68,18 +68,19 @@ body {
 
 /* Book Button in Navigation */
 .nav-links .book-button {
-    background-color: #3b82f6;
+    background-color: #ffd700;
+    color: #333;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
     transition: all 0.3s;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .nav-links .book-button:hover {
-    background-color: #2563eb;
+    background-color: #ffed4a;
     opacity: 1;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
 }
 
 /* Mobile Menu Toggle */
@@ -180,7 +181,7 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1e3a8a;
+    color: #4a90e2;
 }
 
 .about-content p {
@@ -208,7 +209,7 @@ body {
 }
 
 .feature h3 {
-    color: #1e3a8a;
+    color: #4a90e2;
     margin-bottom: 1rem;
 }
 
@@ -227,7 +228,7 @@ body {
 }
 
 .service-item h3 {
-    color: #1e3a8a;
+    color: #4a90e2;
     font-size: 1.25rem;
     margin-bottom: 1rem;
     font-weight: 700;
@@ -248,7 +249,7 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1e3a8a;
+    color: #4a90e2;
 }
 
 .booking-form {
@@ -265,7 +266,7 @@ body {
 }
 
 .form-section h3 {
-    color: #1e3a8a;
+    color: #4a90e2;
     margin-bottom: 1rem;
 }
 
@@ -347,7 +348,7 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #1e3a8a;
+    background-color: #4a90e2;
     color: white;
     padding: 2rem 0;
     margin-top: auto;
@@ -384,7 +385,7 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1e3a8a;
+    color: #4a90e2;
 }
 
 /* Responsive Design */
@@ -420,7 +421,7 @@ body {
         top: calc(100% + 15px);
         left: 0;
         width: 100%;
-        background-color: #1e3a8a;
+        background-color: #4a90e2;
         flex-direction: column;
         padding: 1rem 0;
         gap: 0;
