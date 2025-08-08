@@ -8,6 +8,10 @@ body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: #333;
+    background-color: #f8fafc;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
@@ -18,9 +22,9 @@ body {
 
 /* Navigation */
 .navbar {
-    background-color: #1e3a8a;
+    background-color: #4a90e2;
     color: white;
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     position: fixed;
     width: 100%;
     top: 0;
@@ -35,8 +39,15 @@ body {
 }
 
 .nav-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    height: 60px;
+    width: auto;
+    display: block;
+    padding: 2px 0;
 }
 
 .nav-links {
@@ -57,18 +68,19 @@ body {
 
 /* Book Button in Navigation */
 .nav-links .book-button {
-    background-color: #3b82f6;
+    background-color: #ffd700;
+    color: #333;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
     transition: all 0.3s;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .nav-links .book-button:hover {
-    background-color: #2563eb;
+    background-color: #ffed4a;
     opacity: 1;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
 }
 
 /* Mobile Menu Toggle */
@@ -104,7 +116,7 @@ body {
 
 /* Hero Section */
 .hero {
-    margin-top: 60px;
+    margin-top: 75px;
     position: relative;
     height: 600px;
     overflow: hidden;
@@ -138,6 +150,7 @@ body {
 .hero h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
+    color: #ffd700;
 }
 
 .hero p {
@@ -162,14 +175,13 @@ body {
 /* About Section */
 .about {
     padding: 4rem 0;
-    background-color: #f8fafc;
 }
 
 .about h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1e3a8a;
+    color: #4a90e2;
 }
 
 .about-content p {
@@ -197,7 +209,7 @@ body {
 }
 
 .feature h3 {
-    color: #1e3a8a;
+    color: #4a90e2;
     margin-bottom: 1rem;
 }
 
@@ -216,7 +228,7 @@ body {
 }
 
 .service-item h3 {
-    color: #1e3a8a;
+    color: #4a90e2;
     font-size: 1.25rem;
     margin-bottom: 1rem;
     font-weight: 700;
@@ -233,17 +245,29 @@ body {
     padding: 4rem 0;
 }
 
+.book-it h1,
 .book-it h2 {
     text-align: center;
     font-size: 2.5rem;
-    margin-bottom: 3rem;
-    color: #1e3a8a;
+    margin-bottom: 1.5rem;
+    color: #4a90e2;
+}
+
+.booking-intro {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .booking-form {
     max-width: 800px;
     margin: 0 auto;
-    background: #f8fafc;
+    background: white;
     padding: 2rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -254,7 +278,7 @@ body {
 }
 
 .form-section h3 {
-    color: #1e3a8a;
+    color: #4a90e2;
     margin-bottom: 1rem;
 }
 
@@ -267,6 +291,19 @@ body {
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #555;
+}
+
+.form-group .error,
+.form-group .errorlist {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 5px;
+    list-style: none;
+    padding: 0;
+}
+
+.form-group .errorlist li {
+    margin-bottom: 3px;
 }
 
 .form-group input,
@@ -336,10 +373,10 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #1e3a8a;
+    background-color: #4a90e2;
     color: white;
-    padding: 2rem 0;
-    margin-top: 4rem;
+    padding: 1rem 0;
+    margin-top: auto;
 }
 
 .footer-content {
@@ -365,34 +402,57 @@ body {
 
 /* Page Section for Book page */
 .page-section {
-    margin-top: 80px;
-    min-height: calc(100vh - 80px);
+    margin-top: 75px;
+    flex: 1;
 }
 
 .page-section h1 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1e3a8a;
+    color: #4a90e2;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 1rem 0;
+    }
+    .navbar .container {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        position: relative;
+    }
+    
+    .nav-brand {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .nav-logo {
+        height: 65px;
+        padding: 8px 0;
+    }
+    
     .mobile-menu-toggle {
         display: flex;
+        margin-left: auto;
     }
     
     .nav-links {
         position: absolute;
-        top: 100%;
+        top: calc(100% + 15px);
         left: 0;
         width: 100%;
-        background-color: #1e3a8a;
+        background-color: #4a90e2;
         flex-direction: column;
         padding: 1rem 0;
         gap: 0;
         display: none;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 999;
     }
     
     .nav-links.active {
@@ -412,6 +472,7 @@ body {
     
     .hero {
         height: 400px;
+        margin-top: 55px;
     }
     
     .hero h1 {
@@ -424,6 +485,7 @@ body {
     
     .features {
         grid-template-columns: 1fr;
+        padding: 0 4rem;
     }
     
     .form-row {
@@ -447,7 +509,7 @@ body {
     }
     
     .hero {
-        margin-top: 100px;
+        margin-top: 55px;
     }
     
     .booking-form {
