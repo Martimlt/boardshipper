@@ -159,11 +159,11 @@ def create_easypost_shipment(sender_profile, booking):
     # Log the selected rate for transparency
     print(f"Selected cheapest rate: {cheapest_rate.get('carrier')} - {cheapest_rate.get('service')} at ${cheapest_rate.get('rate')}")
     
-    # Purchase the shipping label
+    # Purchase the shipping label with $500 insurance
     try:
         buy_resp = requests.post(
             f"https://api.easypost.com/v2/shipments/{shipment['id']}/buy",
-            json={'rate': {'id': rate_id}},
+            json={'rate': {'id': rate_id}, 'insurance': '500.00'},
             headers=headers
         )
         buy_resp.raise_for_status()
