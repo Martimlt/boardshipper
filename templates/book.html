@@ -7,48 +7,75 @@
     <section class="book-it page-section">
         <div class="container">
             <h1>Book Your Shipment</h1>
-            <form class="booking-form" id="bookingForm">
-                <div class="form-section">
-                    <h3>Sender Information</h3>
-                    <div class="form-group">
-                        <label for="senderName">Your/Company Name *</label>
-                        <input type="text" id="senderName" name="senderName" required>
-                    </div>
-                </div>
+            
+            {% if messages %}
+                {% for message in messages %}
+                    {% if 'error' in message.tags %}
+                        <div class="alert-message alert-error" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 15px; border-radius: 4px; position: relative;">
+                            {{ message }}
+                            <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; opacity: 0.7;" onclick="this.parentElement.remove()">×</button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <form class="booking-form" id="bookingForm" method="POST">
+                {% csrf_token %}
+                <!-- Sender name is auto-filled from profile -->
 
                 <div class="form-section">
                     <h3>Recipient Information</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="recipientFirstName">First Name *</label>
-                            <input type="text" id="recipientFirstName" name="recipientFirstName" required>
+                            {{ form.recipient_first_name.label_tag }}
+                            {{ form.recipient_first_name }}
+                            {% if form.recipient_first_name.errors %}
+                                <div class="error">{{ form.recipient_first_name.errors }}</div>
+                            {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="recipientLastName">Last Name *</label>
-                            <input type="text" id="recipientLastName" name="recipientLastName" required>
+                            {{ form.recipient_last_name.label_tag }}
+                            {{ form.recipient_last_name }}
+                            {% if form.recipient_last_name.errors %}
+                                <div class="error">{{ form.recipient_last_name.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="recipientStreet">Street Address *</label>
-                        <input type="text" id="recipientStreet" name="recipientStreet" required>
+                        {{ form.recipient_street.label_tag }}
+                        {{ form.recipient_street }}
+                        {% if form.recipient_street.errors %}
+                            <div class="error">{{ form.recipient_street.errors }}</div>
+                        {% endif %}
                     </div>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="recipientCity">City *</label>
-                            <input type="text" id="recipientCity" name="recipientCity" required>
+                            {{ form.recipient_city.label_tag }}
+                            {{ form.recipient_city }}
+                            {% if form.recipient_city.errors %}
+                                <div class="error">{{ form.recipient_city.errors }}</div>
+                            {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="recipientState">State/Province *</label>
-                            <input type="text" id="recipientState" name="recipientState" required>
+                            {{ form.recipient_state.label_tag }}
+                            {{ form.recipient_state }}
+                            {% if form.recipient_state.errors %}
+                                <div class="error">{{ form.recipient_state.errors }}</div>
+                            {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="recipientZip">Zip/Postal Code *</label>
-                            <input type="text" id="recipientZip" name="recipientZip" required>
+                            {{ form.recipient_zip.label_tag }}
+                            {{ form.recipient_zip }}
+                            {% if form.recipient_zip.errors %}
+                                <div class="error">{{ form.recipient_zip.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="recipientCountry">Country *</label>
-                        <input type="text" id="recipientCountry" name="recipientCountry" required>
+                        {{ form.recipient_country.label_tag }}
+                        {{ form.recipient_country }}
+                        {% if form.recipient_country.errors %}
+                            <div class="error">{{ form.recipient_country.errors }}</div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -56,42 +83,36 @@
                     <h3>Package Details</h3>
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="boxSize">Board Type *</label>
-                            <select id="boxSize" name="boxSize" required>
-                                <option value="">Select board type</option>
-                                <option value="shortboard">Shortboard</option>
-                                <option value="midlength">Midlength</option>
-                                <option value="longboard">Longboard</option>
-                            </select>
+                            {{ form.box_size.label_tag }}
+                            {{ form.box_size }}
+                            {% if form.box_size.errors %}
+                                <div class="error">{{ form.box_size.errors }}</div>
+                            {% endif %}
                         </div>
                         <div class="form-group">
-                            <label for="weight">Weight (lbs) *</label>
-                            <input type="number" id="weight" name="weight" min="1" required>
+                            {{ form.weight.label_tag }}
+                            {{ form.weight }}
+                            {% if form.weight.errors %}
+                                <div class="error">{{ form.weight.errors }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="orderReference">Order Reference</label>
-                        <input type="text" id="orderReference" name="orderReference">
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Service Type</h3>
-                    <div class="form-group">
-                        <label for="service">Select Service *</label>
-                        <div class="radio-group">
-                            <label class="radio-label">
-                                <input type="radio" name="service" value="door-to-door" required checked>
-                                <span>Door to Door</span>
-                            </label>
-                        </div>
+                        {{ form.order_reference.label_tag }}
+                        {{ form.order_reference }}
+                        {% if form.order_reference.errors %}
+                            <div class="error">{{ form.order_reference.errors }}</div>
+                        {% endif %}
                     </div>
                 </div>
 
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="additionalInfo">Additional Information</label>
-                        <textarea id="additionalInfo" name="additionalInfo" rows="4" placeholder="Any special instructions or requirements..."></textarea>
+                        {{ form.additional_info.label_tag }}
+                        {{ form.additional_info }}
+                        {% if form.additional_info.errors %}
+                            <div class="error">{{ form.additional_info.errors }}</div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -99,4 +120,20 @@
             </form>
         </div>
     </section>
+    
+    <script>
+        // Auto-hide messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.alert-message');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.transition = 'opacity 0.5s ease-out';
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 500);
+                }, 5000);
+            });
+        });
+    </script>
 {% endblock %}

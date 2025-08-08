@@ -245,11 +245,23 @@ body {
     padding: 4rem 0;
 }
 
+.book-it h1,
 .book-it h2 {
     text-align: center;
     font-size: 2.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     color: #4a90e2;
+}
+
+.booking-intro {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
 }
 
 .booking-form {
@@ -279,6 +291,19 @@ body {
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: #555;
+}
+
+.form-group .error,
+.form-group .errorlist {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: 5px;
+    list-style: none;
+    padding: 0;
+}
+
+.form-group .errorlist li {
+    margin-bottom: 3px;
 }
 
 .form-group input,

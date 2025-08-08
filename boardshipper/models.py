@@ -26,7 +26,7 @@ class Booking(models.Model):
     recipient_city = models.CharField(max_length=100)
     recipient_state = models.CharField(max_length=100)
     recipient_zip = models.CharField(max_length=20)
-    recipient_country = models.CharField(max_length=2)
+    recipient_country = models.CharField(max_length=100)
     
     # Package Details
     BOX_SIZE_CHOICES = [

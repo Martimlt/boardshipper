@@ -1,12 +1,55 @@
 # Utility functions and constants for BoardShipper
 
 import os
+import json
 import requests
 import base64
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
+
+# Country name to ISO code mapping for EasyPost
+COUNTRY_CODE_MAP = {
+    'United States': 'US',
+    'Canada': 'CA',
+    'Mexico': 'MX',
+    'Australia': 'AU',
+    'New Zealand': 'NZ',
+    'United Kingdom': 'GB',
+    'France': 'FR',
+    'Spain': 'ES',
+    'Portugal': 'PT',
+    'Brazil': 'BR',
+    'Argentina': 'AR',
+    'Chile': 'CL',
+    'Peru': 'PE',
+    'Ecuador': 'EC',
+    'Costa Rica': 'CR',
+    'Panama': 'PA',
+    'Nicaragua': 'NI',
+    'El Salvador': 'SV',
+    'Guatemala': 'GT',
+    'Japan': 'JP',
+    'Indonesia': 'ID',
+    'Philippines': 'PH',
+    'Thailand': 'TH',
+    'Malaysia': 'MY',
+    'Singapore': 'SG',
+    'South Africa': 'ZA',
+    'Morocco': 'MA',
+    'Ireland': 'IE',
+    'Germany': 'DE',
+    'Italy': 'IT',
+    'Netherlands': 'NL',
+    'Belgium': 'BE',
+    'Switzerland': 'CH',
+    'Austria': 'AT',
+    'Norway': 'NO',
+    'Sweden': 'SE',
+    'Denmark': 'DK',
+    'Finland': 'FI',
+}
 
 # Box size mapping for different board types
 BOX_SIZE_MAP = {
@@ -30,40 +73,74 @@ def create_easypost_shipment(sender_profile, booking):
         dict with shipment_id, label_url, and tracking_url
     """
     
+    
     if not EASYPOST_API_KEY:
         raise ValueError("EASYPOST_API_KEY not configured. Please set it in environment variables.")
+    # Check if using test mode (test API keys start with "EZTK")
+    is_test_mode = EASYPOST_API_KEY.startswith('EZTK')
     
     # Get parcel dimensions based on board type
-    # Note: booking.box_size now contains 'shortboard', 'midlength', or 'longboard'
     parcel_info = BOX_SIZE_MAP.get(booking.box_size, BOX_SIZE_MAP['shortboard'])
     
+    # Map country names to ISO codes for EasyPost
+    recipient_country_code = COUNTRY_CODE_MAP.get(booking.recipient_country, 'US')
+    sender_country_code = COUNTRY_CODE_MAP.get(sender_profile.country, 'US')
+    
     # Construct EasyPost payload
+    if is_test_mode:
+        # Use valid test addresses for test mode
+        to_address = {
+            "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
+            "street1": "388 Townsend St",  # Valid test address
+            "street2": "Apt 20",
+            "city": "San Francisco",
+            "state": "CA",
+            "zip": "94107",
+            "country": "US",
+            "email": "test@example.com",
+            "phone": "415-555-1212"
+        }
+        from_address = {
+            "name": sender_profile.business_name or "Test Sender",
+            "street1": "179 N Harbor Dr",  # Valid test address
+            "city": "Redondo Beach",
+            "state": "CA", 
+            "zip": "90277",
+            "country": "US",
+            "email": "sender@example.com",
+            "phone": "310-555-1212"
+        }
+    else:
+        # Use actual addresses for production
+        to_address = {
+            "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
+            "street1": booking.recipient_street,
+            "city": booking.recipient_city,
+            "state": booking.recipient_state,
+            "zip": booking.recipient_zip,
+            "country": recipient_country_code,
+            "email": "recipient@example.com",
+            "phone": "555-555-5555"
+        }
+        from_address = {
+            "name": sender_profile.business_name or "Sender Name",
+            "street1": sender_profile.street_address,
+            "city": sender_profile.city,
+            "state": sender_profile.state,
+            "zip": sender_profile.zip_code,
+            "country": sender_country_code,
+            "email": sender_profile.user.email or "sender@example.com",
+            "phone": "555-555-5555"
+        }
+    
     payload = {
         "shipment": {
-            "to_address": {
-                "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
-                "street1": booking.recipient_street,
-                "city": booking.recipient_city,
-                "state": booking.recipient_state,
-                "zip": booking.recipient_zip,
-                "country": booking.recipient_country,
-                "phone": "",  # Add phone field if available in booking
-                "email": ""   # Add email field if available in booking
-            },
-            "from_address": {
-                "name": sender_profile.business_name,
-                "street1": sender_profile.street_address,
-                "city": sender_profile.city,
-                "state": sender_profile.state,
-                "zip": sender_profile.zip_code,
-                "country": sender_profile.country,
-                "phone": "",  # Add phone field if available in profile
-                "email": sender_profile.user.email  # Get email from associated user
-            },
+            "to_address": to_address,
+            "from_address": from_address,
             "parcel": {
-                "length": parcel_info['length'],
-                "width": parcel_info['width'],
-                "height": parcel_info['height'],
+                "length": float(parcel_info['length']),
+                "width": float(parcel_info['width']),
+                "height": float(parcel_info['height']),
                 "weight": float(booking.weight) * 16,  # Convert pounds to ounces
             }
         }
@@ -92,11 +169,14 @@ def create_easypost_shipment(sender_profile, booking):
     shipment = resp.json()
     
     # Check if rates are available
-    if not shipment.get('rates'):
-        raise Exception("No shipping rates available for this shipment")
+    if not shipment.get('rates') or len(shipment.get('rates', [])) == 0:
+        # In test mode, provide helpful message
+        if is_test_mode:
+            raise Exception("No shipping rates available. Test mode is using fixed test addresses.")
+        else:
+            raise Exception("No shipping rates available for this shipment. Please verify the addresses are valid.")
     
-    # Select a rate (using the first one for now - you might want to add logic to select specific carrier/service)
-    # In production, you might want to filter by carrier (USPS, FedEx, UPS) or service type
+    # Select a rate (using the first one for now)
     rate_id = shipment['rates'][0]['id']
     
     # Purchase the shipping label
@@ -144,6 +224,10 @@ def get_easypost_rates(sender_profile, booking):
     # Get parcel dimensions based on board type
     parcel_info = BOX_SIZE_MAP.get(booking.box_size, BOX_SIZE_MAP['shortboard'])
     
+    # Map country names to ISO codes for EasyPost
+    recipient_country_code = COUNTRY_CODE_MAP.get(booking.recipient_country, 'US')
+    sender_country_code = COUNTRY_CODE_MAP.get(sender_profile.country, 'US')
+    
     # Construct EasyPost payload
     payload = {
         "shipment": {
@@ -153,7 +237,7 @@ def get_easypost_rates(sender_profile, booking):
                 "city": booking.recipient_city,
                 "state": booking.recipient_state,
                 "zip": booking.recipient_zip,
-                "country": booking.recipient_country,
+                "country": recipient_country_code,  # Use ISO code
             },
             "from_address": {
                 "name": sender_profile.business_name,
@@ -161,7 +245,7 @@ def get_easypost_rates(sender_profile, booking):
                 "city": sender_profile.city,
                 "state": sender_profile.state,
                 "zip": sender_profile.zip_code,
-                "country": sender_profile.country,
+                "country": sender_country_code,  # Use ISO code
                 "email": sender_profile.user.email
             },
             "parcel": {

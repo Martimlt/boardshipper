@@ -34,7 +34,7 @@ def login_view(request):
                 login(request, user)
                 # Get business name from profile
                 business_name = user.profile.business_name if hasattr(user, 'profile') else user.first_name
-                messages.success(request, f'Welcome back, {business_name}!')
+                # Removed success message
                 # Redirect to booking page after login
                 next_page = request.GET.get('next', 'book')
                 return redirect(next_page)
@@ -55,7 +55,7 @@ def register_view(request):
             user = form.save()
             login(request, user)
             business_name = form.cleaned_data['business_name']
-            messages.success(request, f'Welcome to BoardShipper, {business_name}!')
+            # Removed success message
             return redirect('book')
     else:
         form = RegistrationForm()
@@ -64,7 +64,7 @@ def register_view(request):
 
 def logout_view(request):
     logout(request)
-    messages.success(request, 'You have been logged out successfully.')
+    # Removed logout success message
     return redirect('home')
 
 @login_required
@@ -74,6 +74,7 @@ def book(request):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
+            booking.service = 'door-to-door'  # Default service since we only offer door-to-door
             # Pre-fill sender name from business profile
             if hasattr(request.user, 'profile'):
                 booking.sender_name = request.user.profile.business_name
@@ -90,17 +91,19 @@ def book(request):
                     booking.tracking_url = result['tracking_url']
                     booking.easypost_shipment_id = result['shipment_id']
                     booking.save()
-                    messages.success(request, 'Booking successful! Your shipping label has been created. You can download or print your label below.')
+                    # Removed booking success message
                 else:
-                    messages.warning(request, 'Booking saved but label creation requires a complete business profile.')
+                    pass  # Booking saved but label creation requires a complete business profile
             except Exception as e:
-                messages.warning(request, f'Booking saved but label creation failed: {str(e)}. We will contact you with shipping details.')
+                pass  # Label creation failed but booking was saved
             
             return redirect('booking_detail', pk=booking.pk)
+        else:
+            messages.error(request, "Please correct the errors in the form below.")
     else:
         form = BookingForm()
     
-    return render(request, 'book_django.html', {'form': form})
+    return render(request, 'book.html', {'form': form})
 
 @login_required
 def booking_detail(request, pk):

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
+from .forms import COUNTRY_CHOICES
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
@@ -67,11 +68,10 @@ class RegistrationForm(UserCreationForm):
             'required': True
         })
     )
-    country = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={
+    country = forms.ChoiceField(
+        choices=COUNTRY_CHOICES,
+        widget=forms.Select(attrs={
             'class': 'form-control',
-            'placeholder': 'Country',
             'required': True
         })
     )

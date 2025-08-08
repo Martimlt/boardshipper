@@ -37,16 +37,6 @@
         </div>
     </nav>
 
-    {% if messages %}
-        <div style="position: fixed; top: 80px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 90%; max-width: 600px;">
-            {% for message in messages %}
-                <div style="background: #10b981; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; text-align: center;">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
     {% block content %}{% endblock %}
 
     <!-- Footer -->
