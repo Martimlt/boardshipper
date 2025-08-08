@@ -22,6 +22,8 @@ class Booking(models.Model):
     # Recipient Information
     recipient_first_name = models.CharField(max_length=100)
     recipient_last_name = models.CharField(max_length=100)
+    recipient_email = models.EmailField()
+    recipient_phone = models.CharField(max_length=20)
     recipient_street = models.CharField(max_length=200)
     recipient_city = models.CharField(max_length=100)
     recipient_state = models.CharField(max_length=100)
@@ -52,6 +54,9 @@ class Booking(models.Model):
     label_url = models.URLField(blank=True, null=True)
     tracking_url = models.URLField(blank=True, null=True)
     easypost_shipment_id = models.CharField(max_length=100, blank=True, null=True)
+    shipping_carrier = models.CharField(max_length=50, blank=True, null=True)
+    shipping_service = models.CharField(max_length=100, blank=True, null=True)
+    shipping_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     
     # Timestamp
     created_at = models.DateTimeField(auto_now_add=True)

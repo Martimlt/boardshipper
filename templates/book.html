@@ -40,6 +40,22 @@
                             {% endif %}
                         </div>
                     </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            {{ form.recipient_email.label_tag }}
+                            {{ form.recipient_email }}
+                            {% if form.recipient_email.errors %}
+                                <div class="error">{{ form.recipient_email.errors }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="form-group">
+                            {{ form.recipient_phone.label_tag }}
+                            {{ form.recipient_phone }}
+                            {% if form.recipient_phone.errors %}
+                                <div class="error">{{ form.recipient_phone.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
                     <div class="form-group">
                         {{ form.recipient_street.label_tag }}
                         {{ form.recipient_street }}

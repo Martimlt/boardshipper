@@ -86,52 +86,27 @@ def create_easypost_shipment(sender_profile, booking):
     recipient_country_code = COUNTRY_CODE_MAP.get(booking.recipient_country, 'US')
     sender_country_code = COUNTRY_CODE_MAP.get(sender_profile.country, 'US')
     
-    # Construct EasyPost payload
-    if is_test_mode:
-        # Use valid test addresses for test mode
-        to_address = {
-            "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
-            "street1": "388 Townsend St",  # Valid test address
-            "street2": "Apt 20",
-            "city": "San Francisco",
-            "state": "CA",
-            "zip": "94107",
-            "country": "US",
-            "email": "test@example.com",
-            "phone": "415-555-1212"
-        }
-        from_address = {
-            "name": sender_profile.business_name or "Test Sender",
-            "street1": "179 N Harbor Dr",  # Valid test address
-            "city": "Redondo Beach",
-            "state": "CA", 
-            "zip": "90277",
-            "country": "US",
-            "email": "sender@example.com",
-            "phone": "310-555-1212"
-        }
-    else:
-        # Use actual addresses for production
-        to_address = {
-            "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
-            "street1": booking.recipient_street,
-            "city": booking.recipient_city,
-            "state": booking.recipient_state,
-            "zip": booking.recipient_zip,
-            "country": recipient_country_code,
-            "email": "recipient@example.com",
-            "phone": "555-555-5555"
-        }
-        from_address = {
-            "name": sender_profile.business_name or "Sender Name",
-            "street1": sender_profile.street_address,
-            "city": sender_profile.city,
-            "state": sender_profile.state,
-            "zip": sender_profile.zip_code,
-            "country": sender_country_code,
-            "email": sender_profile.user.email or "sender@example.com",
-            "phone": "555-555-5555"
-        }
+    # Construct EasyPost payload - use actual addresses from form
+    to_address = {
+        "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
+        "street1": booking.recipient_street,
+        "city": booking.recipient_city,
+        "state": booking.recipient_state,
+        "zip": booking.recipient_zip,
+        "country": recipient_country_code,
+        "email": booking.recipient_email,
+        "phone": booking.recipient_phone
+    }
+    from_address = {
+        "name": sender_profile.business_name or "Sender Name",
+        "street1": sender_profile.street_address,
+        "city": sender_profile.city,
+        "state": sender_profile.state,
+        "zip": sender_profile.zip_code,
+        "country": sender_country_code,
+        "email": sender_profile.user.email or "sender@example.com",
+        "phone": "555-555-5555"
+    }
     
     payload = {
         "shipment": {
@@ -176,8 +151,13 @@ def create_easypost_shipment(sender_profile, booking):
         else:
             raise Exception("No shipping rates available for this shipment. Please verify the addresses are valid.")
     
-    # Select a rate (using the first one for now)
-    rate_id = shipment['rates'][0]['id']
+    # Select the cheapest rate
+    rates = shipment.get('rates', [])
+    cheapest_rate = min(rates, key=lambda x: float(x.get('rate', float('inf'))))
+    rate_id = cheapest_rate['id']
+    
+    # Log the selected rate for transparency
+    print(f"Selected cheapest rate: {cheapest_rate.get('carrier')} - {cheapest_rate.get('service')} at ${cheapest_rate.get('rate')}")
     
     # Purchase the shipping label
     try:
@@ -195,13 +175,17 @@ def create_easypost_shipment(sender_profile, booking):
     
     bought_shipment = buy_resp.json()
     
-    # Extract the relevant information
+    # Extract the relevant information including carrier details
+    selected_rate = bought_shipment.get('selected_rate', {})
     return {
         'shipment_id': bought_shipment['id'],
         'label_url': bought_shipment.get('postage_label', {}).get('label_url', ''),
         'tracking_url': bought_shipment.get('tracker', {}).get('public_url', ''),
         'tracking_code': bought_shipment.get('tracking_code', ''),
-        'selected_rate': bought_shipment.get('selected_rate', {})
+        'carrier': selected_rate.get('carrier', ''),
+        'service': selected_rate.get('service', ''),
+        'rate': selected_rate.get('rate', 0),
+        'selected_rate': selected_rate
     }
 
 

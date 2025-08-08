@@ -56,6 +56,8 @@ class BookingForm(forms.ModelForm):
         labels = {
             'recipient_first_name': 'First Name *',
             'recipient_last_name': 'Last Name *',
+            'recipient_email': 'Email *',
+            'recipient_phone': 'Phone Number *',
             'recipient_street': 'Street Address *',
             'recipient_city': 'City *',
             'recipient_state': 'State/Province *',
@@ -69,6 +71,8 @@ class BookingForm(forms.ModelForm):
             'sender_name': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_sender_name'}),
             'recipient_first_name': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_first_name'}),
             'recipient_last_name': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_last_name'}),
+            'recipient_email': forms.EmailInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_email', 'placeholder': 'recipient@example.com'}),
+            'recipient_phone': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_phone', 'placeholder': '(555) 123-4567'}),
             'recipient_street': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_street'}),
             'recipient_city': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_city'}),
             'recipient_state': forms.TextInput(attrs={'class': 'form-control', 'required': True, 'id': 'id_recipient_state'}),

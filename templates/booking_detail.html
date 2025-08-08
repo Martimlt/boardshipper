@@ -23,6 +23,14 @@
                 <div style="background: #f0f9ff; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
                     <h3 style="color: #4a90e2; margin-bottom: 1rem;">Shipping Information</h3>
                     
+                    {% if booking.shipping_carrier %}
+                    <div style="margin-bottom: 1rem;">
+                        <p><strong>Carrier:</strong> {{ booking.shipping_carrier|upper }}</p>
+                        <p><strong>Service:</strong> {{ booking.shipping_service }}</p>
+                        <p><strong>Shipping Cost:</strong> ${{ booking.shipping_rate }}</p>
+                    </div>
+                    {% endif %}
+                    
                     {% if booking.label_url %}
                     <div style="margin-bottom: 1rem;">
                         <a href="{{ booking.label_url }}" target="_blank" style="display: inline-block; background: #4a90e2; color: white; padding: 0.75rem 1.5rem; text-decoration: none; border-radius: 5px; margin-right: 1rem;">
@@ -57,6 +65,8 @@
                 <div style="margin-bottom: 2rem;">
                     <h3 style="color: #4a90e2; margin-bottom: 1rem;">Recipient Information</h3>
                     <p><strong>Name:</strong> {{ booking.recipient_first_name }} {{ booking.recipient_last_name }}</p>
+                    <p><strong>Email:</strong> {{ booking.recipient_email }}</p>
+                    <p><strong>Phone:</strong> {{ booking.recipient_phone }}</p>
                     <p><strong>Address:</strong> {{ booking.recipient_street }}</p>
                     <p><strong>City:</strong> {{ booking.recipient_city }}</p>
                     <p><strong>State:</strong> {{ booking.recipient_state }}</p>
