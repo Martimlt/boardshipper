@@ -27,15 +27,16 @@ def login_view(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             
-            # Try to authenticate with email as username
             user = authenticate(request, username=email, password=password)
             
             if user is not None:
                 login(request, user)
+                # Set a flag to show welcome message
+                request.session['just_logged_in'] = True
                 next_page = request.GET.get('next', 'book')
                 return redirect(next_page)
             else:
-                messages.error(request, 'Invalid email or password.')
+                form.add_error('password', 'Invalid email or password.')
     else:
         form = LoginForm()
     
@@ -65,6 +66,9 @@ def logout_view(request):
 
 @login_required
 def book(request):
+    # Check if user just logged in
+    show_welcome = request.session.pop('just_logged_in', False)
+    
     if request.method == 'POST':
         form = BookingForm(request.POST)
         if form.is_valid():
@@ -98,7 +102,7 @@ def book(request):
     else:
         form = BookingForm()
     
-    return render(request, 'book.html', {'form': form})
+    return render(request, 'book.html', {'form': form, 'show_welcome': show_welcome})
 
 @login_required
 def booking_detail(request, pk):

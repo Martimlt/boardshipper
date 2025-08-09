@@ -8,6 +8,23 @@
         <div class="container">
             <h1 style="text-align: center; font-size: 2.5rem; margin-bottom: 3rem; margin-top: 3rem; color: #4a90e2;">Book Your Shipment</h1>
             
+            {% if show_welcome and user.profile.business_name %}
+                <div id="welcome-message" style="text-align: center; color: #4a90e2; font-size: 1.2rem; margin-top: -20px; padding-top: 0; margin-bottom: 2rem; transition: opacity 0.5s ease;">
+                    Welcome, {{ user.profile.business_name }}!
+                </div>
+                <script>
+                    setTimeout(function() {
+                        var welcomeMsg = document.getElementById('welcome-message');
+                        if (welcomeMsg) {
+                            welcomeMsg.style.opacity = '0';
+                            setTimeout(function() {
+                                welcomeMsg.style.display = 'none';
+                            }, 500);
+                        }
+                    }, 5000);
+                </script>
+            {% endif %}
+            
             {% if messages %}
                 {% for message in messages %}
                     {% if 'error' in message.tags %}

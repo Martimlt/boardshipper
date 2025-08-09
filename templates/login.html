@@ -104,9 +104,6 @@
                     <div class="error-message">{{ form.password.errors.0 }}</div>
                 {% endif %}
             </div>
-            {% if form.non_field_errors %}
-                <div class="error-message">{{ form.non_field_errors.0 }}</div>
-            {% endif %}
             <button type="submit" class="submit-button">Login</button>
         </form>
         <div class="links">

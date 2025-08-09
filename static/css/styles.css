@@ -267,8 +267,10 @@ body {
 .booking-form {
     max-width: 800px;
     margin: 0 auto;
+    margin-bottom: 3rem;
     background: white;
     padding: 2rem;
+    padding-bottom: 3rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
