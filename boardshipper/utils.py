@@ -1,7 +1,6 @@
 # Utility functions and constants for BoardShipper
 
 import os
-import json
 import requests
 import base64
 from dotenv import load_dotenv
@@ -72,21 +71,15 @@ def create_easypost_shipment(sender_profile, booking):
     Returns:
         dict with shipment_id, label_url, and tracking_url
     """
-    
-    
     if not EASYPOST_API_KEY:
         raise ValueError("EASYPOST_API_KEY not configured. Please set it in environment variables.")
-    # Check if using test mode (test API keys start with "EZTK")
+    
     is_test_mode = EASYPOST_API_KEY.startswith('EZTK')
     
-    # Get parcel dimensions based on board type
     parcel_info = BOX_SIZE_MAP.get(booking.box_size, BOX_SIZE_MAP['shortboard'])
     
-    # Map country names to ISO codes for EasyPost
     recipient_country_code = COUNTRY_CODE_MAP.get(booking.recipient_country, 'US')
     sender_country_code = COUNTRY_CODE_MAP.get(sender_profile.country, 'US')
-    
-    # Construct EasyPost payload - use actual addresses from form
     to_address = {
         "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
         "street1": booking.recipient_street,
@@ -143,23 +136,22 @@ def create_easypost_shipment(sender_profile, booking):
     
     shipment = resp.json()
     
-    # Check if rates are available
-    if not shipment.get('rates') or len(shipment.get('rates', [])) == 0:
-        # In test mode, provide helpful message
+    if not shipment.get('rates'):
         if is_test_mode:
             raise Exception("No shipping rates available. Test mode is using fixed test addresses.")
         else:
             raise Exception("No shipping rates available for this shipment. Please verify the addresses are valid.")
     
-    # Select the cheapest rate
     rates = shipment.get('rates', [])
-    cheapest_rate = min(rates, key=lambda x: float(x.get('rate', float('inf'))))
+    gso_rates = [rate for rate in rates if rate.get('carrier') == 'GSO']
+    
+    if gso_rates:
+        cheapest_rate = min(gso_rates, key=lambda x: float(x.get('rate', float('inf'))))
+    else:
+        cheapest_rate = min(rates, key=lambda x: float(x.get('rate', float('inf'))))
+    
     rate_id = cheapest_rate['id']
     
-    # Log the selected rate for transparency
-    print(f"Selected cheapest rate: {cheapest_rate.get('carrier')} - {cheapest_rate.get('service')} at ${cheapest_rate.get('rate')}")
-    
-    # Purchase the shipping label with $500 insurance
     try:
         buy_resp = requests.post(
             f"https://api.easypost.com/v2/shipments/{shipment['id']}/buy",
@@ -175,7 +167,6 @@ def create_easypost_shipment(sender_profile, booking):
     
     bought_shipment = buy_resp.json()
     
-    # Extract the relevant information including carrier details
     selected_rate = bought_shipment.get('selected_rate', {})
     return {
         'shipment_id': bought_shipment['id'],
@@ -187,81 +178,3 @@ def create_easypost_shipment(sender_profile, booking):
         'rate': selected_rate.get('rate', 0),
         'selected_rate': selected_rate
     }
-
-
-def get_easypost_rates(sender_profile, booking):
-    """
-    Get shipping rates from EasyPost without purchasing.
-    Useful for showing rates to customers before finalizing.
-    
-    Args:
-        sender_profile: UserProfile object with sender's address information
-        booking: Booking object with recipient info and package details
-    
-    Returns:
-        list of available rates
-    """
-    
-    if not EASYPOST_API_KEY:
-        raise ValueError("EASYPOST_API_KEY not configured. Please set it in environment variables.")
-    
-    # Get parcel dimensions based on board type
-    parcel_info = BOX_SIZE_MAP.get(booking.box_size, BOX_SIZE_MAP['shortboard'])
-    
-    # Map country names to ISO codes for EasyPost
-    recipient_country_code = COUNTRY_CODE_MAP.get(booking.recipient_country, 'US')
-    sender_country_code = COUNTRY_CODE_MAP.get(sender_profile.country, 'US')
-    
-    # Construct EasyPost payload
-    payload = {
-        "shipment": {
-            "to_address": {
-                "name": f"{booking.recipient_first_name} {booking.recipient_last_name}",
-                "street1": booking.recipient_street,
-                "city": booking.recipient_city,
-                "state": booking.recipient_state,
-                "zip": booking.recipient_zip,
-                "country": recipient_country_code,  # Use ISO code
-            },
-            "from_address": {
-                "name": sender_profile.business_name,
-                "street1": sender_profile.street_address,
-                "city": sender_profile.city,
-                "state": sender_profile.state,
-                "zip": sender_profile.zip_code,
-                "country": sender_country_code,  # Use ISO code
-                "email": sender_profile.user.email
-            },
-            "parcel": {
-                "length": parcel_info['length'],
-                "width": parcel_info['width'],
-                "height": parcel_info['height'],
-                "weight": float(booking.weight) * 16,  # Convert pounds to ounces
-            }
-        }
-    }
-    
-    # Prepare authentication headers
-    headers = {
-        'Authorization': 'Basic ' + base64.b64encode(f"{EASYPOST_API_KEY}:".encode()).decode(),
-        'Content-Type': 'application/json'
-    }
-    
-    # Create shipment to get rates
-    try:
-        resp = requests.post(
-            'https://api.easypost.com/v2/shipments',
-            json=payload,
-            headers=headers
-        )
-        resp.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        raise Exception(f"EasyPost API Error getting rates: {str(e)}")
-    
-    if resp.status_code != 200 and resp.status_code != 201:
-        raise Exception(f"EasyPost Error: {resp.text}")
-    
-    shipment = resp.json()
-    
-    # Return the rates for display/selection
-    return shipment.get('rates', [])

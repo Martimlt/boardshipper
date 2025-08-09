@@ -32,10 +32,6 @@ def login_view(request):
             
             if user is not None:
                 login(request, user)
-                # Get business name from profile
-                business_name = user.profile.business_name if hasattr(user, 'profile') else user.first_name
-                # Removed success message
-                # Redirect to booking page after login
                 next_page = request.GET.get('next', 'book')
                 return redirect(next_page)
             else:
@@ -74,15 +70,14 @@ def book(request):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.user = request.user
-            booking.service = 'door-to-door'  # Default service since we only offer door-to-door
-            # Pre-fill sender name from business profile
+            booking.service = 'door-to-door'
+
             if hasattr(request.user, 'profile'):
                 booking.sender_name = request.user.profile.business_name
             else:
                 booking.sender_name = request.user.first_name
             booking.save()
             
-            # === CREATE LABEL WITH EASYPOST ===
             try:
                 if hasattr(request.user, 'profile'):
                     sender_profile = request.user.profile
@@ -94,11 +89,8 @@ def book(request):
                     booking.shipping_service = result.get('service', '')
                     booking.shipping_rate = result.get('rate', 0)
                     booking.save()
-                    # Removed booking success message
-                else:
-                    pass  # Booking saved but label creation requires a complete business profile
-            except Exception as e:
-                pass  # Label creation failed but booking was saved
+            except Exception:
+                pass
             
             return redirect('booking_detail', pk=booking.pk)
         else:
@@ -112,3 +104,8 @@ def book(request):
 def booking_detail(request, pk):
     booking = get_object_or_404(Booking, pk=pk, user=request.user)
     return render(request, 'booking_detail.html', {'booking': booking})
+
+@login_required
+def shipments(request):
+    bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'shipments.html', {'bookings': bookings})

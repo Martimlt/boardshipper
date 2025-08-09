@@ -1,0 +1,234 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Shipments - BoardShipper{% endblock %}
+
+{% block extra_head %}
+<style>
+    .shipments-container {
+        margin: 0 5rem;
+        padding: 6rem 1rem 3rem;
+    }
+    
+    .shipments-header {
+        text-align: center;
+        color: #4a90e2;
+        font-size: 2.5rem;
+        margin-bottom: 3rem;
+        margin-top: 3rem;
+    }
+    
+    .shipment-box {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 1rem;
+        transition: box-shadow 0.3s ease;
+        overflow: hidden;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-left: 4px solid #4a90e2;
+    }
+    
+    .shipment-box:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .shipment-left {
+        display: flex;
+        gap: 4rem;
+        align-items: center;
+        flex: 1;
+    }
+    
+    .shipment-info {
+        min-width: 150px;
+    }
+    
+    .shipment-id {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .shipment-date {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    
+    .shipment-route {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        color: #444;
+        flex: 1;
+    }
+    
+    .route-arrow {
+        font-size: 1.5rem;
+        color: #4a90e2;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+    }
+    
+    .btn {
+        padding: 0.4rem 0.8rem;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        white-space: nowrap;
+    }
+    
+    .btn-primary {
+        background: #4a90e2;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #357abd;
+    }
+    
+    .btn-success {
+        background: #28a745;
+        color: white;
+    }
+    
+    .btn-success:hover {
+        background: #218838;
+    }
+    
+    .btn-secondary {
+        background: #6c757d;
+        color: white;
+    }
+    
+    .btn-secondary:hover {
+        background: #545b62;
+    }
+    
+    .no-shipments {
+        text-align: center;
+        padding: 3rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .no-shipments h3 {
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    
+    .no-shipments p {
+        color: #999;
+        margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 1200px) {
+        .shipments-container {
+            margin: 0 3rem;
+        }
+    }
+    
+    @media (max-width: 950px) {
+        .shipment-box {
+            flex-direction: column;
+            gap: 2px;
+            align-items: stretch;
+        }
+        
+        .shipment-left {
+            flex-direction: column;
+            gap: 2px;
+            width: 100%;
+        }
+        
+        .shipment-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .shipment-route {
+            width: 100%;
+        }
+        
+        .action-buttons {
+            width: 100%;
+            justify-content: flex-start;
+            margin-top: 10px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .shipments-container {
+            margin: 0 1rem;
+        }
+        
+        .shipment-box {
+            padding: 1rem;
+        }
+        
+        .btn {
+            font-size: 0.8rem;
+            padding: 0.35rem 0.7rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="shipments-container">
+    <h1 class="shipments-header">My Shipments</h1>
+    
+    {% if bookings %}
+        {% for booking in bookings %}
+        <div class="shipment-box">
+            <div class="shipment-left">
+                <div class="shipment-info">
+                    <div class="shipment-id">Shipment #{{ booking.id }}</div>
+                    <div class="shipment-date">{{ booking.created_at|date:"M d, Y" }}</div>
+                </div>
+                <div class="shipment-route">
+                    <span>{{ booking.sender_name|default:"Sender" }}</span>
+                    <span class="route-arrow">→</span>
+                    <span>{{ booking.recipient_first_name }} {{ booking.recipient_last_name }}</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'booking_detail' booking.pk %}" class="btn btn-primary">
+                    📋 Details
+                </a>
+                {% if booking.label_url %}
+                <a href="{{ booking.label_url }}" target="_blank" class="btn btn-success">
+                    📦 Label
+                </a>
+                {% endif %}
+                {% if booking.tracking_url %}
+                <a href="{{ booking.tracking_url }}" target="_blank" class="btn btn-secondary">
+                    🚚 Track
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-shipments">
+            <h3>No Shipments Yet</h3>
+            <p>You haven't created any shipments. Start shipping your boards today!</p>
+            <a href="{% url 'book' %}" class="btn btn-primary">Create Your First Shipment</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

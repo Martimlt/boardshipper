@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .forms import COUNTRY_CHOICES
+import os
 
 class LoginForm(forms.Form):
     email = forms.EmailField(
@@ -21,6 +22,15 @@ class LoginForm(forms.Form):
     )
 
 class RegistrationForm(UserCreationForm):
+    registration_code = forms.CharField(
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Registration Code',
+            'required': True
+        }),
+        help_text='Enter the registration code provided to you'
+    )
     business_name = forms.CharField(
         max_length=200,
         widget=forms.TextInput(attrs={
@@ -95,6 +105,20 @@ class RegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('email', 'password1', 'password2')
+
+    def clean_registration_code(self):
+        """Validate the registration code against the environment variable"""
+        code = self.cleaned_data.get('registration_code')
+        valid_code = os.environ.get('REGISTRATION_CODE', '')
+        
+        if not valid_code:
+            # If no code is set in environment, allow any code (for development)
+            return code
+        
+        if code != valid_code:
+            raise forms.ValidationError('Invalid registration code. Please contact the administrator for a valid code.')
+        
+        return code
 
     def save(self, commit=True):
         user = super().save(commit=False)
