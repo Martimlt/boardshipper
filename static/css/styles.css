@@ -492,6 +492,22 @@ body {
     
     .form-row {
         grid-template-columns: 1fr;
+        gap: 0;
+    }
+    
+    .form-row.city-state-zip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .form-row.city-state-zip-row .city-field {
+        width: 100%;
+    }
+    
+    .form-row.city-state-zip-row .state-field,
+    .form-row.city-state-zip-row .zip-field {
+        width: calc(50% - 0.5rem);
     }
     
     .radio-group {

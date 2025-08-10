@@ -80,22 +80,22 @@
                             <div class="error">{{ form.recipient_street.errors }}</div>
                         {% endif %}
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
+                    <div class="form-row city-state-zip-row">
+                        <div class="form-group city-field">
                             {{ form.recipient_city.label_tag }}
                             {{ form.recipient_city }}
                             {% if form.recipient_city.errors %}
                                 <div class="error">{{ form.recipient_city.errors }}</div>
                             {% endif %}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group state-field">
                             {{ form.recipient_state.label_tag }}
                             {{ form.recipient_state }}
                             {% if form.recipient_state.errors %}
                                 <div class="error">{{ form.recipient_state.errors }}</div>
                             {% endif %}
                         </div>
-                        <div class="form-group">
+                        <div class="form-group zip-field">
                             {{ form.recipient_zip.label_tag }}
                             {{ form.recipient_zip }}
                             {% if form.recipient_zip.errors %}
