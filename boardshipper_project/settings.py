@@ -36,16 +36,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-dev-key-change-this')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-# Security settings - only enable in production
+# Debug settings based on environment
 if 'PYTHONANYWHERE_DOMAIN' in os.environ:
+    DEBUG = False
+    # Security settings for production
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    DEBUG = False
+else:
+    DEBUG = True
 
 # Allowed hosts
 ALLOWED_HOSTS = ["boardshipper.pythonanywhere.com", "127.0.0.1", "localhost"]

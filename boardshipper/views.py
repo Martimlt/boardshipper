@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .models import Booking, UserProfile
+from .models import Booking
 from .forms import BookingForm
 from .auth_forms import LoginForm, RegistrationForm
 from .utils import create_easypost_shipment
@@ -52,7 +51,6 @@ def register_view(request):
             user = form.save()
             login(request, user)
             business_name = form.cleaned_data['business_name']
-            # Removed success message
             return redirect('book')
     else:
         form = RegistrationForm()
@@ -61,7 +59,6 @@ def register_view(request):
 
 def logout_view(request):
     logout(request)
-    # Removed logout success message
     return redirect('home')
 
 @login_required
@@ -99,9 +96,7 @@ def book(request):
                 pass
             
             return redirect('booking_detail', pk=booking.pk)
-        else:
-            # Don't add message here since form errors are already displayed
-            pass
+        # Form errors are displayed in template
     else:
         form = BookingForm()
     
