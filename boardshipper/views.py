@@ -77,8 +77,8 @@ def book(request):
                 booking.sender_name = request.user.profile.business_name
             else:
                 booking.sender_name = request.user.first_name
-            booking.save()
             
+            # Try to create the shipment with EasyPost first
             try:
                 if hasattr(request.user, 'profile'):
                     sender_profile = request.user.profile
@@ -91,11 +91,16 @@ def book(request):
                     # Store both the actual EasyPost rate and customer price
                     booking.shipping_rate = result.get('rate', 0)  # Actual EasyPost rate
                     booking.shipping_rate_user = booking.get_customer_price()  # Customer-facing price
+                    # Only save if EasyPost succeeds
                     booking.save()
-            except Exception:
-                pass
-            
-            return redirect('booking_detail', pk=booking.pk)
+                    return redirect('booking_detail', pk=booking.pk)
+            except Exception as e:
+                # If EasyPost fails, don't save the booking and show error
+                form.add_error(None, 
+                    'Unable to process shipment. This may be due to an invalid address. '
+                    'Please verify the address details and try again. If the problem persists, '
+                    'please contact support.')
+                # Don't save the booking if EasyPost fails
         # Form errors are displayed in template
     else:
         form = BookingForm()
