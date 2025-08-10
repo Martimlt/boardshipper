@@ -61,5 +61,19 @@ class Booking(models.Model):
     # Timestamp
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def get_customer_price(self):
+        """Calculate the price to show to the customer based on board size and destination"""
+        is_california = self.recipient_state.upper() in ['CA', 'CALIFORNIA']
+        
+        if self.box_size == 'shortboard':
+            return 55 if is_california else 75
+        elif self.box_size == 'midlength':
+            return 95 if is_california else 110
+        elif self.box_size == 'longboard':
+            return 155 if is_california else 175
+        else:
+            # Default to shortboard pricing if something goes wrong
+            return 55 if is_california else 75
+    
     def __str__(self):
         return f"{self.sender_name} - {self.recipient_first_name} {self.recipient_last_name} - {self.created_at.strftime('%Y-%m-%d')}"
