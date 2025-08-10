@@ -45,6 +45,7 @@ if 'PYTHONANYWHERE_DOMAIN' in os.environ:
     CSRF_COOKIE_SECURE = True
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
+    DEBUG = False
 
 # Allowed hosts
 ALLOWED_HOSTS = ["boardshipper.pythonanywhere.com", "127.0.0.1", "localhost"]
