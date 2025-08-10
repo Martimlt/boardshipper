@@ -56,7 +56,8 @@ class Booking(models.Model):
     easypost_shipment_id = models.CharField(max_length=100, blank=True, null=True)
     shipping_carrier = models.CharField(max_length=50, blank=True, null=True)
     shipping_service = models.CharField(max_length=100, blank=True, null=True)
-    shipping_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    shipping_rate = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # Actual EasyPost rate
+    shipping_rate_user = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)  # Customer-facing rate
     
     # Timestamp
     created_at = models.DateTimeField(auto_now_add=True)

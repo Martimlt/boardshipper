@@ -91,8 +91,9 @@ def book(request):
                     booking.easypost_shipment_id = result['shipment_id']
                     booking.shipping_carrier = result.get('carrier', '')
                     booking.shipping_service = result.get('service', '')
-                    # Store the customer price instead of actual rate
-                    booking.shipping_rate = booking.get_customer_price()
+                    # Store both the actual EasyPost rate and customer price
+                    booking.shipping_rate = result.get('rate', 0)  # Actual EasyPost rate
+                    booking.shipping_rate_user = booking.get_customer_price()  # Customer-facing price
                     booking.save()
             except Exception:
                 pass

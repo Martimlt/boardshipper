@@ -45,7 +45,7 @@
                     {% if booking.shipping_carrier %}
                     <div style="margin-bottom: 1rem;">
                         <p><strong>Carrier:</strong> {{ booking.shipping_carrier|upper }}</p>
-                        <p><strong>Shipping Cost:</strong> ${{ booking.shipping_rate }}</p>
+                        <p><strong>Shipping Cost:</strong> ${{ booking.shipping_rate_user|default:booking.get_customer_price }}</p>
                     </div>
                     {% endif %}
                     
