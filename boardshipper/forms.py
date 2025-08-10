@@ -82,3 +82,44 @@ class BookingForm(forms.ModelForm):
             'order_reference': forms.TextInput(attrs={'class': 'form-control', 'id': 'id_order_reference'}),
             'additional_info': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Any special instructions or requirements...', 'id': 'id_additional_info'}),
         }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        box_size = cleaned_data.get('box_size')
+        recipient_state = cleaned_data.get('recipient_state')
+        recipient_country = cleaned_data.get('recipient_country')
+        
+        # Only allow US shipping
+        if recipient_country and recipient_country != 'United States':
+            raise forms.ValidationError(
+                'Shipping is currently only available within the United States. '
+                'For international shipping, please contact support.'
+            )
+        
+        # ONLY allow shipping to these specific states
+        allowed_states = [
+            'CA', 'CALIFORNIA', 
+            'OR', 'OREGON', 
+            'WA', 'WASHINGTON',
+            'CO', 'COLORADO', 
+            'ID', 'IDAHO', 
+            'AZ', 'ARIZONA',
+            'NV', 'NEVADA'
+        ]
+        
+        if recipient_state and recipient_state.upper() not in allowed_states:
+            raise forms.ValidationError(
+                'We are unable to ship to this location. Please contact support for assistance.'
+            )
+        
+        # Check longboard restrictions
+        if box_size == 'longboard' and recipient_state:
+            longboard_states = ['CA', 'CALIFORNIA', 'OR', 'OREGON', 'WA', 'WASHINGTON', 
+                              'CO', 'COLORADO', 'ID', 'IDAHO', 'AZ', 'ARIZONA', 'NV', 'NEVADA']
+            if recipient_state.upper() not in longboard_states:
+                raise forms.ValidationError(
+                    'Longboard shipping is only available to CA, OR, WA, CO, ID, AZ, and NV. '
+                    'Please select Shortboard or Midlength for other states.'
+                )
+        
+        return cleaned_data

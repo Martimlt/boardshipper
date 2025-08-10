@@ -64,14 +64,33 @@ class Booking(models.Model):
     
     def get_customer_price(self):
         """Calculate the price to show to the customer based on board size and destination"""
-        is_california = self.recipient_state.upper() in ['CA', 'CALIFORNIA']
+        state = self.recipient_state.upper()
+        is_california = state in ['CA', 'CALIFORNIA']
+        is_west_region = state in ['OR', 'OREGON', 'WA', 'WASHINGTON', 'CO', 'COLORADO', 
+                                   'ID', 'IDAHO', 'AZ', 'ARIZONA', 'NV', 'NEVADA']
         
         if self.box_size == 'shortboard':
-            return 55 if is_california else 75
+            if is_california:
+                return 55
+            elif is_west_region:
+                return 75
+            else:
+                return 95
         elif self.box_size == 'midlength':
-            return 95 if is_california else 110
+            if is_california:
+                return 95
+            elif is_west_region:
+                return 110
+            else:
+                return 195
         elif self.box_size == 'longboard':
-            return 155 if is_california else 175
+            if is_california:
+                return 155
+            elif is_west_region:
+                return 175
+            else:
+                # Longboard not available for other states
+                return None
         else:
             # Default to shortboard pricing if something goes wrong
             return 55 if is_california else 75

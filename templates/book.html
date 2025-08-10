@@ -25,16 +25,15 @@
                 </script>
             {% endif %}
             
-            {% if messages %}
-                {% for message in messages %}
-                    {% if 'error' in message.tags %}
-                        <div class="alert-message alert-error" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 15px; border-radius: 4px; position: relative;">
-                            {{ message }}
-                            <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; opacity: 0.7;" onclick="this.parentElement.remove()">×</button>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+            {% if form.non_field_errors %}
+                <div class="alert-message alert-error" style="background-color: #f8d7da; color: #721c24; padding: 15px; margin-bottom: 15px; border-radius: 4px; position: relative;">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                    <button type="button" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; font-size: 20px; cursor: pointer; color: inherit; opacity: 0.7;" onclick="this.parentElement.remove()">×</button>
+                </div>
             {% endif %}
+            
             <form class="booking-form" id="bookingForm" method="POST">
                 {% csrf_token %}
                 <!-- Sender name is auto-filled from profile -->
@@ -155,8 +154,17 @@
     </section>
     
     <script>
-        // Auto-hide messages after 5 seconds
         document.addEventListener('DOMContentLoaded', function() {
+            // Scroll to first error if there are validation errors
+            const firstError = document.querySelector('.error, .alert-error');
+            if (firstError) {
+                // Scroll to the error with some offset for the fixed header
+                const yOffset = -100; 
+                const y = firstError.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                window.scrollTo({top: y, behavior: 'smooth'});
+            }
+            
+            // Auto-hide messages after 5 seconds
             const messages = document.querySelectorAll('.alert-message');
             messages.forEach(function(message) {
                 setTimeout(function() {
@@ -167,6 +175,45 @@
                     }, 500);
                 }, 5000);
             });
+            
+            // Check state availability
+            const boxSizeSelect = document.getElementById('id_box_size');
+            const stateInput = document.getElementById('id_recipient_state');
+            
+            function checkStateAvailability() {
+                if (!stateInput) return;
+                
+                const state = stateInput.value.toUpperCase();
+                const allowedStates = ['CA', 'CALIFORNIA', 'OR', 'OREGON', 'WA', 'WASHINGTON', 
+                                      'CO', 'COLORADO', 'ID', 'IDAHO', 'AZ', 'ARIZONA', 'NV', 'NEVADA'];
+                
+                // Remove any existing warnings
+                const existingWarning = document.getElementById('state-warning');
+                if (existingWarning) {
+                    existingWarning.remove();
+                }
+                
+                // Only check if user has entered at least 2 characters
+                if (state.length >= 2 && !allowedStates.includes(state)) {
+                    let warningDiv = document.createElement('div');
+                    warningDiv.id = 'state-warning';
+                    warningDiv.style.cssText = 'background-color: #fee2e2; color: #dc2626; padding: 10px; margin-top: 10px; border-radius: 4px; font-size: 0.9rem;';
+                    warningDiv.textContent = 'We are unable to ship to this location. Please contact support for assistance.';
+                    stateInput.parentElement.appendChild(warningDiv);
+                }
+                // Check longboard availability for allowed states
+                else if (boxSizeSelect && boxSizeSelect.value === 'longboard' && state) {
+                    // All allowed states support longboard, so no additional check needed
+                }
+            }
+            
+            if (boxSizeSelect) {
+                boxSizeSelect.addEventListener('change', checkStateAvailability);
+            }
+            if (stateInput) {
+                stateInput.addEventListener('blur', checkStateAvailability);
+                stateInput.addEventListener('input', checkStateAvailability);
+            }
         });
     </script>
 {% endblock %}

@@ -100,7 +100,8 @@ def book(request):
             
             return redirect('booking_detail', pk=booking.pk)
         else:
-            messages.error(request, "Please correct the errors in the form below.")
+            # Don't add message here since form errors are already displayed
+            pass
     else:
         form = BookingForm()
     
