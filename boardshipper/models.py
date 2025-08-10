@@ -67,7 +67,7 @@ class Booking(models.Model):
         state = self.recipient_state.upper()
         is_california = state in ['CA', 'CALIFORNIA']
         is_west_region = state in ['OR', 'OREGON', 'WA', 'WASHINGTON', 'CO', 'COLORADO', 
-                                   'ID', 'IDAHO', 'AZ', 'ARIZONA', 'NV', 'NEVADA']
+                                   'ID', 'IDAHO', 'AZ', 'ARIZONA']
         
         if self.box_size == 'shortboard':
             if is_california:

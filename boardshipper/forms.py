@@ -103,8 +103,7 @@ class BookingForm(forms.ModelForm):
             'WA', 'WASHINGTON',
             'CO', 'COLORADO', 
             'ID', 'IDAHO', 
-            'AZ', 'ARIZONA',
-            'NV', 'NEVADA'
+            'AZ', 'ARIZONA'
         ]
         
         if recipient_state and recipient_state.upper() not in allowed_states:
@@ -115,10 +114,10 @@ class BookingForm(forms.ModelForm):
         # Check longboard restrictions
         if box_size == 'longboard' and recipient_state:
             longboard_states = ['CA', 'CALIFORNIA', 'OR', 'OREGON', 'WA', 'WASHINGTON', 
-                              'CO', 'COLORADO', 'ID', 'IDAHO', 'AZ', 'ARIZONA', 'NV', 'NEVADA']
+                              'CO', 'COLORADO', 'ID', 'IDAHO', 'AZ', 'ARIZONA']
             if recipient_state.upper() not in longboard_states:
                 raise forms.ValidationError(
-                    'Longboard shipping is only available to CA, OR, WA, CO, ID, AZ, and NV. '
+                    'Longboard shipping is only available to CA, OR, WA, CO, ID, and AZ. '
                     'Please select Shortboard or Midlength for other states.'
                 )
         
