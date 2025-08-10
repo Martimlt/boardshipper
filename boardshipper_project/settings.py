@@ -7,14 +7,23 @@ import os
 
 # Load environment variables from .env file for local development
 if 'PYTHONANYWHERE_DOMAIN' not in os.environ:
-    from pathlib import Path
-    env_path = Path(__file__).resolve().parent.parent / '.env'
-    if env_path.exists():
-        with open(env_path) as f:
-            for line in f:
-                if line.strip() and not line.startswith('#'):
-                    key, value = line.strip().split('=', 1)
-                    os.environ[key] = value
+    try:
+        from dotenv import load_dotenv
+        load_dotenv()
+    except ImportError:
+        # Fallback if python-dotenv is not installed
+        from pathlib import Path
+        env_path = Path(__file__).resolve().parent.parent / '.env'
+        if env_path.exists():
+            with open(env_path) as f:
+                for line in f:
+                    if line.strip() and not line.startswith('#'):
+                        if '=' in line:
+                            key, value = line.strip().split('=', 1)
+                            # Remove quotes if present
+                            if value.startswith('"') and value.endswith('"'):
+                                value = value[1:-1]
+                            os.environ[key] = value
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,16 +38,16 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-default-dev-key-chang
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# Security settings
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
+# Security settings - only enable in production
+if 'PYTHONANYWHERE_DOMAIN' in os.environ:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Allowed hosts
-
-ALLOWED_HOSTS = ["boardshipper.pythonanywhere.com", "127.0.0.1"]
+ALLOWED_HOSTS = ["boardshipper.pythonanywhere.com", "127.0.0.1", "localhost"]
 
 
 # Application definition
