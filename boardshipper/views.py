@@ -115,3 +115,9 @@ def booking_detail(request, pk):
 def shipments(request):
     bookings = Booking.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'shipments.html', {'bookings': bookings})
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
+
+def custom_500(request):
+    return render(request, '500.html', status=500)
