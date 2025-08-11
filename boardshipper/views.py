@@ -96,8 +96,9 @@ def book(request):
                     return redirect('booking_detail', pk=booking.pk)
             except Exception as e:
                 # If EasyPost fails, don't save the booking and show error
+                error_message = str(e)
                 form.add_error(None, 
-                    'Unable to process shipment. This may be due to an invalid address. '
+                    f'Unable to process shipment: {error_message}. '
                     'Please verify the address details and try again. If the problem persists, '
                     'please contact support.')
                 # Don't save the booking if EasyPost fails
