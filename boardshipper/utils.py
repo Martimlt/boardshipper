@@ -154,7 +154,7 @@ def create_easypost_shipment(sender_profile, booking):
     try:
         buy_resp = requests.post(
             f"https://api.easypost.com/v2/shipments/{shipment['id']}/buy",
-            json={'rate': {'id': rate_id}, 'insurance': '500.00'},
+            json={'rate': {'id': rate_id}, 'insurance': '300.00'},
             headers=headers
         )
         buy_resp.raise_for_status()
