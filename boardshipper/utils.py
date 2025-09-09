@@ -145,11 +145,10 @@ def create_easypost_shipment(sender_profile, booking):
     rates = shipment.get('rates', [])
     gso_rates = [rate for rate in rates if rate.get('carrier') == 'GSO']
     
-    if gso_rates:
-        cheapest_rate = min(gso_rates, key=lambda x: float(x.get('rate', float('inf'))))
-    else:
-        cheapest_rate = min(rates, key=lambda x: float(x.get('rate', float('inf'))))
+    if not gso_rates:
+        raise Exception("No shipping rate available for this location. Contact admin.")
     
+    cheapest_rate = min(gso_rates, key=lambda x: float(x.get('rate', float('inf'))))
     rate_id = cheapest_rate['id']
     
     try:
