@@ -113,6 +113,9 @@ def create_easypost_shipment(sender_profile, booking):
             }
         }
     }
+
+    if booking.order_reference:
+        payload["shipment"]["reference"] = booking.order_reference
     
     # Prepare authentication headers
     headers = {
